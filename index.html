@@ -150,12 +150,19 @@
             activeta = 'bangla_text';
             makeUniPhoneticEditor('bangla_text');
 
+            var saved = localStorage.getItem('bangla_text_content');
+            if (saved) {
+                $('#bangla_text').val(saved);
+                updateCharCount();
+            }
+
             $('#bangla_text').on('focus', function() {
                 activeta = 'bangla_text';
             });
 
             $('#bangla_text').on('input keyup', function() {
                 updateCharCount();
+                localStorage.setItem('bangla_text_content', $(this).val());
             });
         });
     </script>
