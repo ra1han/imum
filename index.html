@@ -150,11 +150,13 @@
             activeta = 'bangla_text';
             makeUniPhoneticEditor('bangla_text');
 
-            var saved = localStorage.getItem('bangla_text_content');
-            if (saved) {
-                $('#bangla_text').val(saved);
-                updateCharCount();
-            }
+            setTimeout(function() {
+                var saved = localStorage.getItem('bangla_text_content');
+                if (saved) {
+                    $('#bangla_text').val(saved);
+                    updateCharCount();
+                }
+            }, 100);
 
             $('#bangla_text').on('focus', function() {
                 activeta = 'bangla_text';
@@ -163,6 +165,10 @@
             $('#bangla_text').on('input keyup', function() {
                 updateCharCount();
                 localStorage.setItem('bangla_text_content', $(this).val());
+            });
+
+            $(window).on('beforeunload', function() {
+                localStorage.setItem('bangla_text_content', $('#bangla_text').val());
             });
         });
     </script>
