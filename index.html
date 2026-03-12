@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>বাংলা টাইপিং - Bangla Typing</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'SolaimanLipi', 'Kalpurush', 'Noto Sans Bengali', 'Hind Siliguri', sans-serif;
+            background: #f0f2f5;
+            color: #333;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 30px 15px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 800px;
+            background: #fff;
+            border-radius: 10px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.1);
+            padding: 30px;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 8px;
+            font-size: 28px;
+            color: #2c3e50;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #777;
+            margin-bottom: 25px;
+            font-size: 14px;
+        }
+
+        .typing-area {
+            margin-bottom: 20px;
+        }
+
+        .typing-area textarea {
+            width: 100%;
+            min-height: 250px;
+            padding: 15px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 18px;
+            font-family: 'SolaimanLipi', 'Kalpurush', 'Noto Sans Bengali', 'Hind Siliguri', sans-serif;
+            line-height: 1.8;
+            resize: vertical;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        .typing-area textarea:focus {
+            border-color: #007bff;
+        }
+
+        .typing-area textarea::placeholder {
+            color: #aaa;
+        }
+
+        .info-bar {
+            padding: 10px 0;
+            border-top: 1px solid #eee;
+            font-size: 13px;
+            color: #888;
+            text-align: right;
+        }
+
+        .help-section {
+            margin-top: 20px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            font-size: 13px;
+            color: #666;
+            line-height: 1.6;
+        }
+
+        .help-section h3 {
+            margin-bottom: 8px;
+            color: #555;
+            font-size: 15px;
+        }
+
+        .help-section ul {
+            padding-left: 20px;
+        }
+
+        .help-section li {
+            margin-bottom: 4px;
+        }
+
+        .help-section code {
+            background: #e9ecef;
+            padding: 1px 5px;
+            border-radius: 3px;
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>বাংলা টাইপিং</h1>
+        <p class="subtitle">Bangla Typing Interface</p>
+
+        <div class="typing-area">
+            <textarea class="bng_text" name="bangla_text" id="bangla_text"
+                      placeholder="এখানে বাংলায় লিখুন... (Start typing in Bangla here...)"></textarea>
+        </div>
+
+        <div class="info-bar">
+            <span id="charCount">০ অক্ষর</span>
+        </div>
+
+        <div class="help-section">
+            <h3>ফোনেটিক টাইপিং সহায়িকা (Phonetic Typing Guide)</h3>
+            <ul>
+                <li>ইংরেজি অক্ষর দিয়ে বাংলা লিখুন। যেমন: <code>k</code> = ক, <code>a</code> = া, <code>ami</code> = আমি</li>
+                <li><code>Ctrl+F2</code> দিয়ে বাংলা/ইংরেজি টগল করুন</li>
+                <li>যুক্তাক্ষরের জন্য <code>+</code> ব্যবহার করুন। যেমন: <code>k+T</code> = ক্ত</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Core Bangla keyboard engine from SomewhereIn Blog -->
+    <script src="https://s3.amazonaws.com/somewherein/assets/js/bangla.min.js"></script>
+    <!-- jQuery -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+
+    <script>
+        function updateCharCount() {
+            var len = $('#bangla_text').val().length;
+            $('#charCount').text(len + ' অক্ষর');
+        }
+
+        $(function() {
+            activeta = 'bangla_text';
+            makeUniPhoneticEditor('bangla_text');
+
+            $('#bangla_text').on('focus', function() {
+                activeta = 'bangla_text';
+            });
+
+            $('#bangla_text').on('input keyup', function() {
+                updateCharCount();
+            });
+        });
+    </script>
+</body>
+</html>
