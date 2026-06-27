@@ -4,6 +4,18 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>বাংলা টাইপিং - Bangla Typing</title>
+    <script>
+        (function() {
+            try {
+                var savedTheme = localStorage.getItem('bangla_typing_theme');
+                var preferredTheme = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+                var initialTheme = savedTheme === 'dark' || savedTheme === 'light' ? savedTheme : preferredTheme;
+                document.documentElement.setAttribute('data-theme', initialTheme);
+            } catch (error) {
+                document.documentElement.setAttribute('data-theme', 'light');
+            }
+        }());
+    </script>
     <style>
         * {
             box-sizing: border-box;
@@ -13,36 +25,127 @@
 
         body {
             font-family: 'SolaimanLipi', 'Kalpurush', 'Noto Sans Bengali', 'Hind Siliguri', sans-serif;
-            background: #f0f2f5;
-            color: #333;
+            background: var(--page-bg);
+            color: var(--text-primary);
             min-height: 100vh;
             display: flex;
             flex-direction: column;
             align-items: center;
             padding: 30px 15px;
+            transition: background-color 0.2s, color 0.2s;
+        }
+
+        :root {
+            --page-bg: #f0f2f5;
+            --surface-bg: #fff;
+            --surface-muted: #f8f9fa;
+            --text-primary: #333;
+            --text-heading: #2c3e50;
+            --text-secondary: #777;
+            --text-muted: #888;
+            --border-color: #ddd;
+            --divider-color: #eee;
+            --code-bg: #e9ecef;
+            --focus-color: #007bff;
+            --shadow-color: rgba(0,0,0,0.1);
+            --toggle-bg: #d9dee5;
+            --toggle-thumb: #fff;
+        }
+
+        [data-theme="dark"] {
+            --page-bg: #101418;
+            --surface-bg: #171d23;
+            --surface-muted: #202833;
+            --text-primary: #e8edf2;
+            --text-heading: #f7fafc;
+            --text-secondary: #aeb8c3;
+            --text-muted: #9aa7b3;
+            --border-color: #35414d;
+            --divider-color: #2b3540;
+            --code-bg: #2a3440;
+            --focus-color: #66aaff;
+            --shadow-color: rgba(0,0,0,0.35);
+            --toggle-bg: #66aaff;
+            --toggle-thumb: #0f141a;
         }
 
         .container {
             width: 100%;
             max-width: 800px;
-            background: #fff;
+            background: var(--surface-bg);
             border-radius: 10px;
-            box-shadow: 0 2px 12px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 12px var(--shadow-color);
             padding: 30px;
+            transition: background-color 0.2s, box-shadow 0.2s;
+        }
+
+        .app-header {
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            margin-bottom: 25px;
         }
 
         h1 {
             text-align: center;
             margin-bottom: 8px;
             font-size: 28px;
-            color: #2c3e50;
+            color: var(--text-heading);
         }
 
         .subtitle {
             text-align: center;
-            color: #777;
-            margin-bottom: 25px;
+            color: var(--text-secondary);
             font-size: 14px;
+        }
+
+        .theme-toggle {
+            position: absolute;
+            top: 2px;
+            right: 0;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--text-secondary);
+            cursor: pointer;
+            font-size: 13px;
+            user-select: none;
+        }
+
+        .theme-toggle input {
+            position: absolute;
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .toggle-track {
+            width: 42px;
+            height: 24px;
+            display: inline-flex;
+            align-items: center;
+            padding: 3px;
+            border-radius: 999px;
+            background: var(--toggle-bg);
+            transition: background-color 0.2s;
+        }
+
+        .toggle-thumb {
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: var(--toggle-thumb);
+            box-shadow: 0 1px 4px rgba(0,0,0,0.2);
+            transition: transform 0.2s, background-color 0.2s;
+        }
+
+        .theme-toggle input:checked + .toggle-track .toggle-thumb {
+            transform: translateX(18px);
+        }
+
+        .theme-toggle input:focus-visible + .toggle-track {
+            outline: 2px solid var(--focus-color);
+            outline-offset: 3px;
         }
 
         .typing-area {
@@ -53,45 +156,47 @@
             width: 100%;
             min-height: 250px;
             padding: 15px;
-            border: 2px solid #ddd;
+            border: 2px solid var(--border-color);
             border-radius: 8px;
+            background: var(--surface-bg);
+            color: var(--text-primary);
             font-size: 18px;
             font-family: 'SolaimanLipi', 'Kalpurush', 'Noto Sans Bengali', 'Hind Siliguri', sans-serif;
             line-height: 1.8;
             resize: vertical;
             outline: none;
-            transition: border-color 0.2s;
+            transition: background-color 0.2s, border-color 0.2s, color 0.2s;
         }
 
         .typing-area textarea:focus {
-            border-color: #007bff;
+            border-color: var(--focus-color);
         }
 
         .typing-area textarea::placeholder {
-            color: #aaa;
+            color: var(--text-muted);
         }
 
         .info-bar {
             padding: 10px 0;
-            border-top: 1px solid #eee;
+            border-top: 1px solid var(--divider-color);
             font-size: 13px;
-            color: #888;
+            color: var(--text-muted);
             text-align: right;
         }
 
         .help-section {
             margin-top: 20px;
             padding: 15px;
-            background: #f8f9fa;
+            background: var(--surface-muted);
             border-radius: 8px;
             font-size: 13px;
-            color: #666;
+            color: var(--text-secondary);
             line-height: 1.6;
         }
 
         .help-section h3 {
             margin-bottom: 8px;
-            color: #555;
+            color: var(--text-primary);
             font-size: 15px;
         }
 
@@ -104,17 +209,46 @@
         }
 
         .help-section code {
-            background: #e9ecef;
+            background: var(--code-bg);
             padding: 1px 5px;
             border-radius: 3px;
             font-size: 12px;
+        }
+
+        @media (max-width: 560px) {
+            .app-header {
+                justify-content: flex-start;
+                padding-top: 38px;
+            }
+
+            h1,
+            .subtitle {
+                text-align: left;
+            }
+
+            .theme-toggle {
+                left: 0;
+                right: auto;
+            }
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>বাংলা টাইপিং</h1>
-        <p class="subtitle">Bangla Typing Interface</p>
+        <div class="app-header">
+            <div>
+                <h1>বাংলা টাইপিং</h1>
+                <p class="subtitle">Bangla Typing Interface</p>
+            </div>
+
+            <label class="theme-toggle" for="themeToggle">
+                <span>Dark</span>
+                <input type="checkbox" id="themeToggle" aria-label="Toggle dark mode">
+                <span class="toggle-track" aria-hidden="true">
+                    <span class="toggle-thumb"></span>
+                </span>
+            </label>
+        </div>
 
         <div class="typing-area">
             <textarea class="bng_text" name="bangla_text" id="bangla_text"
@@ -141,14 +275,36 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
 
     <script>
+        function getPreferredTheme() {
+            var savedTheme = localStorage.getItem('bangla_typing_theme');
+            if (savedTheme === 'dark' || savedTheme === 'light') {
+                return savedTheme;
+            }
+
+            return window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+        }
+
+        function applyTheme(theme) {
+            document.documentElement.setAttribute('data-theme', theme);
+            $('#themeToggle').prop('checked', theme === 'dark');
+        }
+
         function updateCharCount() {
             var len = $('#bangla_text').val().length;
             $('#charCount').text(len + ' অক্ষর');
         }
 
         $(function() {
+            applyTheme(getPreferredTheme());
+
             activeta = 'bangla_text';
             makeUniPhoneticEditor('bangla_text');
+
+            $('#themeToggle').on('change', function() {
+                var selectedTheme = this.checked ? 'dark' : 'light';
+                localStorage.setItem('bangla_typing_theme', selectedTheme);
+                applyTheme(selectedTheme);
+            });
 
             setTimeout(function() {
                 var saved = localStorage.getItem('bangla_text_content');
